@@ -1,5 +1,5 @@
 {
-    "name": "iqual-ch/drupal-settings-helper",
+    "name": "iqual/drupal-settings-helper",
     "description": "A static helper for the settings.*.php files",
     "type": "library",
     "authors": [
@@ -9,8 +9,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
     "autoload": {
-        "files": ["lib/DrupalSettings.php"]
-    }    
+        "files": ["lib/Helper.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^8"
+    }
 }
