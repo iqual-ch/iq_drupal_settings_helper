@@ -1,0 +1,16 @@
+{
+    "name": "iqual-ch/drupal-settings-helper",
+    "description": "A static helper for the settings.*.php files",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stefanos Petrakis",
+            "email": "stefanos.petrakis@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": ["lib/DrupalSettings.php"]
+    }    
+}
