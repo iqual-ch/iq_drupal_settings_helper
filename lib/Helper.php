@@ -9,14 +9,14 @@ class Helper {
 
   /**
    * Generates sensible values for the 'trusted_host_patterns' setting.
-   * 
+   *
    * Uses env::VIRTUAL_HOST.
-   * 
+   *
    * @see https://www.drupal.org/node/2410395
-   * 
+   *
    * @return array
    */
-  public static function generateTrustedHostPatterns(array $trustedHosts = NULL) {
+  public static function generateTrustedHostPatterns(array $trustedHosts = []) {
     // Encapsulated in try/catch so we don't break the system here.
     try {
 
@@ -25,29 +25,27 @@ class Helper {
         throw new \Exception('VIRTUAL_HOST does not exist or is empty.');
       }
 
-      $trustedHosts = [];
-
       // Loop through vhosts, allow given host and one subdomain level.
-      $vHosts = explode(',', $vHosts);      
+      $vHosts = explode(',', $vHosts);
       foreach($vHosts as $vhost) {
         if (strpos($vhost, '*') !== 0) {
           $trustedHosts[] = preg_quote($vhost);
-          $trustedHosts[] = '.+\.' . preg_quote($vhost); 
+          $trustedHosts[] = '.+\.' . preg_quote($vhost);
         } else {
           // Leave catch alls alone.
           $trustedHosts[] = str_replace('*.', '.+\.', $vhost);
         }
       }
 
-      // Assert position of trusted host.
-      $trustedHosts = array_map(function($host) { return '^' . $host . '$'; }, $trustedHosts);
-
     } catch (\Exception $e) {
       fwrite(STDERR, $e->getMessage() . PHP_EOL);
     }
     finally {
+      // Assert position of trusted host.
+      $trustedHosts = array_unique(array_map(function($host) { return '^' . rtrim(ltrim($host, '^'), '$') . '$'; }, $trustedHosts));
+
       // Return patterns for trusted hosts or any host.
-      return $trustedHosts ?? [static::ANY_HOST_PATTERN];      
+      return empty($trustedHosts) ? [static::ANY_HOST_PATTERN] : $trustedHosts;
     }
   }
 }
